@@ -51,7 +51,7 @@ public class ConfigParam implements Serializable {
         }
 
         public Builder setMaxPagesToFind(int maxPagesToFind) {
-            ConfigParam.this.maxPagesToFind = maxDepthOfCrawling;
+            ConfigParam.this.maxPagesToFind = maxPagesToFind;
             return this;
         }
 
