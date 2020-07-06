@@ -22,6 +22,8 @@ public class WebCrawlerStarter {
         Controller controller = new Controller();
         controller.startWebScrapping(configParam);
 
+
+
         //String WIKI_ELON_MUSK = "https://en.wikipedia.org/wiki/Elon_Musk";
 
     }

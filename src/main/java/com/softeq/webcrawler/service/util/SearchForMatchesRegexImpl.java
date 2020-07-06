@@ -1,4 +1,4 @@
-package com.softeq.webcrawler.util;
+package com.softeq.webcrawler.service.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

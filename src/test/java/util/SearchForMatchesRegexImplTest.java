@@ -1,6 +1,6 @@
 package util;
 
-import com.softeq.webcrawler.util.SearchForMatchesRegexImpl;
+import com.softeq.webcrawler.service.util.SearchForMatchesRegexImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

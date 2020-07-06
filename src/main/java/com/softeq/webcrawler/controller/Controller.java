@@ -1,27 +1,38 @@
 package com.softeq.webcrawler.controller;
 
 import com.softeq.webcrawler.bean.ConfigParam;
-import com.softeq.webcrawler.util.SearchForMatches;
-import com.softeq.webcrawler.util.SearchForMatchesRegexImpl;
+import com.softeq.webcrawler.dal.CSVHelper;
+import com.softeq.webcrawler.dal.CSVHelperImpl;
+import com.softeq.webcrawler.service.util.SearchForMatches;
+import com.softeq.webcrawler.service.util.SearchForMatchesRegexImpl;
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.*;
 
-import static com.softeq.webcrawler.util.JsoupParser.addLinksToQueue;
-import static com.softeq.webcrawler.util.JsoupParser.getHTMLDocumentByURL;
+import static com.softeq.webcrawler.service.util.JsoupParser.addLinksToQueue;
+import static com.softeq.webcrawler.service.util.JsoupParser.getHTMLDocumentByURL;
 
+/**
+ * The type Controller.
+ */
 public class Controller {
 
     private static final Logger logger = Logger.getLogger(Controller.class);
 
+    /**
+     * Start web scrapping.
+     *
+     * @param configParam the config param
+     */
     public void startWebScrapping(ConfigParam configParam) {
-
 
         List<String> inputWords = new ArrayList<>(Arrays.asList(configParam.getWordsToFind().split(",")));
         //TODO concurrent queue
         Deque<String> reference = new ArrayDeque<String>();
+        StringBuilder header = new StringBuilder(configParam.getUrl()).append(" ,").append(configParam.getWordsToFind()).append(" , TOTAL");
+        StringBuilder records = new StringBuilder();
         int maxPagesToFind = configParam.getMaxPagesToFind();
         int maxDepthOfCrawling = configParam.getMaxDepthOfCrawling();
 
@@ -31,16 +42,15 @@ public class Controller {
         try {
             while (!reference.isEmpty() & maxPagesToFind > 0) {
                 Document document = getHTMLDocumentByURL(reference.getFirst());
-                StringBuilder lineOfCounters = new StringBuilder(configParam.getUrl());
+                StringBuilder lineOfCounters = new StringBuilder(reference.getFirst());
                 lineOfCounters.append(getLineOfCounters(document, inputWords));
 
                 if (maxDepthOfCrawling > 0) {
                     addLinksToQueue(document, reference);
                 }
 
-                logger.info(lineOfCounters);
-                logger.info(reference.size());
-                logger.info(maxPagesToFind);
+                records.append(lineOfCounters).append("\n");
+                logger.info(lineOfCounters + " - " + reference.size() + " - " + maxPagesToFind);
 
                 reference.removeFirst();
                 maxPagesToFind--;
@@ -49,9 +59,11 @@ public class Controller {
 
 
         } catch (IOException e) {
-            //TODO add logger
-            e.printStackTrace();
+            logger.error(e);
         }
+
+        CSVHelper csvHelper = new CSVHelperImpl();
+        csvHelper.writeDataToCSVFile(header, records);
 
 
     }

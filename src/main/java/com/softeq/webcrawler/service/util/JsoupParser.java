@@ -1,4 +1,4 @@
-package com.softeq.webcrawler.util;
+package com.softeq.webcrawler.service.util;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

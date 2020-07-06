@@ -1,4 +1,4 @@
-package com.softeq.webcrawler.util;
+package com.softeq.webcrawler.service.util;
 
 public interface SearchForMatches {
 
