@@ -1,6 +1,7 @@
 package com.softeq.webcrawler;
 
 import com.softeq.webcrawler.bean.ConfigParam;
+import com.softeq.webcrawler.controller.Controller;
 
 public class WebCrawlerStarter {
 
@@ -8,8 +9,8 @@ public class WebCrawlerStarter {
 
         String url = "https://www.tesla.com/elon-musk";
         String wordsToFind = "Tesla, Musk, Gigafactory, Elon Mask";
-        int maxDepthOfCrawling = 1;
-        int maxPagesToFind = 100;
+        int maxDepthOfCrawling = 2;
+        int maxPagesToFind = 42;
 
         ConfigParam configParam = ConfigParam.newBuilder()
                 .setUrl(url)

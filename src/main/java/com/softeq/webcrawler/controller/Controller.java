@@ -1,8 +1,9 @@
-package com.softeq.webcrawler;
+package com.softeq.webcrawler.controller;
 
 import com.softeq.webcrawler.bean.ConfigParam;
 import com.softeq.webcrawler.util.SearchForMatches;
 import com.softeq.webcrawler.util.SearchForMatchesRegexImpl;
+import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
@@ -12,6 +13,8 @@ import static com.softeq.webcrawler.util.JsoupParser.addLinksToQueue;
 import static com.softeq.webcrawler.util.JsoupParser.getHTMLDocumentByURL;
 
 public class Controller {
+
+    private static final Logger logger = Logger.getLogger(Controller.class);
 
     public void startWebScrapping(ConfigParam configParam) {
 
@@ -35,9 +38,10 @@ public class Controller {
                     addLinksToQueue(document, reference);
                 }
 
-                System.out.println(lineOfCounters);
-                System.out.println(reference.size());
-                System.out.println(maxPagesToFind);
+                logger.info(lineOfCounters);
+                logger.info(reference.size());
+                logger.info(maxPagesToFind);
+
                 reference.removeFirst();
                 maxPagesToFind--;
                 maxDepthOfCrawling--;
@@ -56,10 +60,16 @@ public class Controller {
         SearchForMatches searchForMatches = new SearchForMatchesRegexImpl();
         String bodyOfHtml = document.body().text();
         StringBuilder sb = new StringBuilder();
+        long totalCount = 0;
 
         for (String word : inputWords) {
-            sb.append(" ").append(searchForMatches.countMatchesForText(word, bodyOfHtml));
+            long temp = searchForMatches.countMatchesForText(word, bodyOfHtml);
+
+            sb.append(" ").append(temp);
+
+            totalCount += temp;
         }
-        return sb;
+
+        return sb.append(" ").append(totalCount);
     }
 }
