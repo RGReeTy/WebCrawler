@@ -4,29 +4,58 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * The type Record. Every record represents: [url []hits]
+ */
 public class Record implements Serializable {
 
     private static final long serialVersionUID = -488948408549178971L;
     private String url;
     private long[] hits;
 
+    /**
+     * Instantiates a new Record.
+     *
+     * @param url  the url
+     * @param hits the hits
+     */
     public Record(String url, long[] hits) {
         this.url = url;
         this.hits = hits;
     }
 
+    /**
+     * Gets url.
+     *
+     * @return the url
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * Sets url.
+     *
+     * @param url the url
+     */
     public void setUrl(String url) {
         this.url = url;
     }
 
+    /**
+     * Get hits long [ ].
+     *
+     * @return the long [ ]
+     */
     public long[] getHits() {
         return hits;
     }
 
+    /**
+     * Sets hits.
+     *
+     * @param hits the hits
+     */
     public void setHits(long[] hits) {
         this.hits = hits;
     }

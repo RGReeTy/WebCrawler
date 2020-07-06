@@ -14,8 +14,10 @@ public interface CSVHelper {
     /**
      * Write data to csv file.
      *
-     * @param header the StringBuilder
-     * @param body   the StringBuilder
+     * @param header   the StringBuilder
+     * @param body     the StringBuilder
+     * @param fileName the String
+     * @throws IOException the io exception
      */
     void writeDataToCSVFile(StringBuilder header, StringBuilder body, String fileName) throws IOException;
 
@@ -42,9 +44,6 @@ public interface CSVHelper {
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(fileContent);
-
-        //TODO delete
-        System.out.println(fileContent);
 
         bw.close();
         fw.close();
