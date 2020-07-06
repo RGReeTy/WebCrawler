@@ -17,7 +17,7 @@ public interface CSVHelper {
      * @param header the StringBuilder
      * @param body   the StringBuilder
      */
-    void writeDataToCSVFile(StringBuilder header, StringBuilder body);
+    void writeDataToCSVFile(StringBuilder header, StringBuilder body, String fileName) throws IOException;
 
 
     /**
@@ -33,18 +33,19 @@ public interface CSVHelper {
         File file = new File(tempFile);
         // if file does exists, then delete and create a new file
         if (file.exists()) {
-            try {
-                File newFileName = new File(projectPath + File.separator + "backup_" + fileName);
-                file.renameTo(newFileName);
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            File newFileName = new File(projectPath + File.separator + "backup_" + fileName);
+            file.renameTo(newFileName);
+            file.createNewFile();
+
         }
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(fileContent);
+
+        //TODO delete
         System.out.println(fileContent);
+
         bw.close();
         fw.close();
     }

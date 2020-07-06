@@ -2,6 +2,7 @@ package com.softeq.webcrawler;
 
 import com.softeq.webcrawler.bean.ConfigParam;
 import com.softeq.webcrawler.controller.Controller;
+import com.softeq.webcrawler.controller.ControllerImpl;
 
 public class WebCrawlerStarter {
 
@@ -19,7 +20,7 @@ public class WebCrawlerStarter {
                 .setMaxPagesToFind(maxPagesToFind)
                 .build();
 
-        Controller controller = new Controller();
+        Controller controller = new ControllerImpl();
         controller.startWebScrapping(configParam);
 
 
