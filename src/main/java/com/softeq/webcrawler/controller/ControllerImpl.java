@@ -26,8 +26,7 @@ public class ControllerImpl implements Controller {
     private static final Logger logger = Logger.getLogger(ControllerImpl.class);
 
     private List<Record> records = new ArrayList<>();
-    private StringBuilder header = new StringBuilder();
-    private StringBuilder body = new StringBuilder();
+
     private CSVHelper csvHelper = new CSVHelperImpl();
 
     private final String FULL_STAT_FILE_NAME = "CsvStatOfHits.csv";
@@ -35,11 +34,12 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void startWebScrapping(ConfigParam configParam) {
+        StringBuilder header = new StringBuilder(configParam.getUrl()).append(" ,").append(configParam.getWordsToFind()).append(" , TOTAL");
+        StringBuilder body = new StringBuilder();
 
         List<String> inputWords = new ArrayList<>(Arrays.asList(configParam.getWordsToFind().split(",")));
         //TODO concurrent queue
         Deque<String> reference = new ArrayDeque<>();
-        header = new StringBuilder(configParam.getUrl()).append(" ,").append(configParam.getWordsToFind()).append(" , TOTAL");
 
         int maxPagesToFind = configParam.getMaxPagesToFind();
         int maxDepthOfCrawling = configParam.getMaxDepthOfCrawling();
@@ -72,14 +72,14 @@ public class ControllerImpl implements Controller {
         try {
             csvHelper.writeDataToCSVFile(header, body, FULL_STAT_FILE_NAME);
 
-            getTopTenTotalHitsDescOrder();
+            getTopTenTotalHitsDescOrder(header);
         } catch (IOException e) {
             logger.error("Writing data to file throw an error! " + e);
         }
     }
 
 
-    private void getTopTenTotalHitsDescOrder() throws IOException {
+    private void getTopTenTotalHitsDescOrder(StringBuilder header) throws IOException {
         List<Record> topTenRecords = records.stream()
                 .sorted(sortByTotalHits)
                 .limit(10)
@@ -90,6 +90,8 @@ public class ControllerImpl implements Controller {
         getStringBuilderFromListOfEntity(topTenRecords, topTen);
 
         csvHelper.writeDataToCSVFile(header, topTen, TOP_TEN_STAT_FILE_NAME);
+
+        System.out.println("Top ten hits are: \n" + header + topTen);
     }
 
 
