@@ -1,6 +1,7 @@
 package com.softeq.webcrawler.controller;
 
 import com.softeq.webcrawler.bean.ConfigParam;
+import com.softeq.webcrawler.bean.Record;
 import com.softeq.webcrawler.dal.CSVHelper;
 import com.softeq.webcrawler.dal.CSVHelperImpl;
 import com.softeq.webcrawler.service.util.SearchForMatches;
@@ -11,6 +12,7 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.*;
 
+import static com.softeq.webcrawler.service.RecordWorker.getRecordAsStringBuilder;
 import static com.softeq.webcrawler.service.util.JsoupParser.addLinksToQueue;
 import static com.softeq.webcrawler.service.util.JsoupParser.getHTMLDocumentByURL;
 
@@ -29,10 +31,11 @@ public class Controller {
     public void startWebScrapping(ConfigParam configParam) {
 
         List<String> inputWords = new ArrayList<>(Arrays.asList(configParam.getWordsToFind().split(",")));
+        List<Record> records = new ArrayList<>();
         //TODO concurrent queue
         Deque<String> reference = new ArrayDeque<String>();
         StringBuilder header = new StringBuilder(configParam.getUrl()).append(" ,").append(configParam.getWordsToFind()).append(" , TOTAL");
-        StringBuilder records = new StringBuilder();
+        StringBuilder body = new StringBuilder();
         int maxPagesToFind = configParam.getMaxPagesToFind();
         int maxDepthOfCrawling = configParam.getMaxDepthOfCrawling();
 
@@ -42,19 +45,23 @@ public class Controller {
         try {
             while (!reference.isEmpty() & maxPagesToFind > 0) {
                 Document document = getHTMLDocumentByURL(reference.getFirst());
-                StringBuilder lineOfCounters = new StringBuilder(reference.getFirst());
-                lineOfCounters.append(getLineOfCounters(document, inputWords));
+
+                Record record = getLineOfCounters(reference.getFirst(), document, inputWords);
+                records.add(record);
 
                 if (maxDepthOfCrawling > 0) {
                     addLinksToQueue(document, reference);
                 }
 
-                records.append(lineOfCounters).append("\n");
-                logger.info(lineOfCounters + " - " + reference.size() + " - " + maxPagesToFind);
-
                 reference.removeFirst();
                 maxPagesToFind--;
                 maxDepthOfCrawling--;
+            }
+
+            if (!records.isEmpty()) {
+                for (Record record : records) {
+                    body.append(getRecordAsStringBuilder(record)).append("\n");
+                }
             }
 
 
@@ -63,25 +70,27 @@ public class Controller {
         }
 
         CSVHelper csvHelper = new CSVHelperImpl();
-        csvHelper.writeDataToCSVFile(header, records);
-
+        csvHelper.writeDataToCSVFile(header, body);
 
     }
 
-    private StringBuilder getLineOfCounters(Document document, List<String> inputWords) {
+    private Record getLineOfCounters(String url, Document document, List<String> inputWords) {
         SearchForMatches searchForMatches = new SearchForMatchesRegexImpl();
         String bodyOfHtml = document.body().text();
-        StringBuilder sb = new StringBuilder();
+
+        long[] hits = new long[inputWords.size() + 1];
+        int index = 0;
         long totalCount = 0;
 
         for (String word : inputWords) {
+
             long temp = searchForMatches.countMatchesForText(word, bodyOfHtml);
-
-            sb.append(" ").append(temp);
-
+            hits[index] = temp;
             totalCount += temp;
+            index++;
         }
+        hits[hits.length - 1] = totalCount;
 
-        return sb.append(" ").append(totalCount);
+        return new Record(url, hits);
     }
 }
