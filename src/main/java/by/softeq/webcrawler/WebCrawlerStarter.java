@@ -18,10 +18,35 @@ public class WebCrawlerStarter {
      * @param args the input arguments
      */
     public static void main(String[] args) {
+
+//        https://www.tesla.com/elon-musk
+//        Tesla, Musk, Elon
+//        2
+//        42
+
+//        http://seasonvar.ru
+//        2020, новинки, аниме
+//        1
+//        100
+
+        ConfigParam configParam = transformUsersInputsToConfigParameters();
+
+        System.out.println(configParam.toString());
+
+        Controller controller = new ControllerImpl();
+        controller.startWebScrapping(configParam);
+
+    }
+
+    public static ConfigParam transformUsersInputsToConfigParameters() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("WebCrawler began work.\nEnter url:");
         String address = scanner.nextLine();
+
+        if (address.startsWith("www")) {
+            address = "https://" + address;
+        }
 
         while (!InputDataValidator.isValidAddress(address.trim())) {
             System.out.println("Invalid address! Try again..");
@@ -30,6 +55,7 @@ public class WebCrawlerStarter {
 
         System.out.println("Enter comma-separated words for matches");
         String wordsToFind = scanner.nextLine();
+        InputDataValidator.notEmpty(wordsToFind);
 
         System.out.println("Enter number - search depth");
         int maxDepthOfCrawling = scanner.nextInt();
@@ -45,26 +71,11 @@ public class WebCrawlerStarter {
             maxPagesToFind = scanner.nextInt();
         }
 
-
-//        String url = "https://www.tesla.com/elon-musk";
-//        String wordsToFind = "Tesla, Musk, Gigafactory, Elon Mask";
-//        int maxDepthOfCrawling = 2;
-//        int maxPagesToFind = 42;
-
-        ConfigParam configParam = ConfigParam.newBuilder()
+        return ConfigParam.newBuilder()
                 .setUrl(address.trim())
                 .setWordsToFind(wordsToFind)
                 .setMaxDepthOfCrawling(maxDepthOfCrawling)
                 .setMaxPagesToFind(maxPagesToFind)
                 .build();
-
-        Controller controller = new ControllerImpl();
-        controller.startWebScrapping(configParam);
-
-//        String url = "https://softeq.by";
-//        String wordsToFind = "technology, future, possibility";
-//        int maxDepthOfCrawling = 5;
-//        int maxPagesToFind = 500;
-
     }
 }

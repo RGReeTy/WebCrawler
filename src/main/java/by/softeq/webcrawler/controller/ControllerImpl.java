@@ -51,7 +51,6 @@ public class ControllerImpl implements Controller {
         //Search start from input url
         reference.addFirst(configParam.getUrl());
 
-//        try {
         do {
             Document document = null;
             try {

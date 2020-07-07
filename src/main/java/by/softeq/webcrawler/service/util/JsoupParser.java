@@ -1,5 +1,6 @@
 package by.softeq.webcrawler.service.util;
 
+import by.softeq.webcrawler.service.validator.InputDataValidator;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,8 +25,8 @@ public class JsoupParser {
      * @throws IOException the io exception
      */
     public static Document getHTMLDocumentByURL(String url) throws IOException {
-
-        return Jsoup.connect(url).get();
+        InputDataValidator.notEmpty(url);
+        return Jsoup.connect(url).timeout(10000).get();
 
     }
 
