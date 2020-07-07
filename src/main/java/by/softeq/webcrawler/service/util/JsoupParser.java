@@ -1,4 +1,4 @@
-package com.softeq.webcrawler.service.util;
+package by.softeq.webcrawler.service.util;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;

@@ -1,6 +1,6 @@
-package com.softeq.webcrawler.controller;
+package by.softeq.webcrawler.controller;
 
-import com.softeq.webcrawler.bean.ConfigParam;
+import by.softeq.webcrawler.bean.ConfigParam;
 
 /**
  * The interface Controller.

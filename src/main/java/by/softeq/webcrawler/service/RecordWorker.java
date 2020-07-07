@@ -1,6 +1,6 @@
-package com.softeq.webcrawler.service;
+package by.softeq.webcrawler.service;
 
-import com.softeq.webcrawler.bean.Record;
+import by.softeq.webcrawler.bean.Record;
 
 import java.util.Arrays;
 import java.util.Comparator;

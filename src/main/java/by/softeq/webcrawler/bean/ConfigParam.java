@@ -1,4 +1,4 @@
-package com.softeq.webcrawler.bean;
+package by.softeq.webcrawler.bean;
 
 import java.io.Serializable;
 import java.util.Objects;

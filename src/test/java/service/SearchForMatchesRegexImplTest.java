@@ -1,13 +1,13 @@
-package util;
+package service;
 
-import com.softeq.webcrawler.service.util.SearchForMatchesRegexImpl;
+import by.softeq.webcrawler.service.util.SearchForMatchesRegexImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class SearchForMatchesRegexImplTest {
 
-    SearchForMatchesRegexImpl searchForMatches;
+    private SearchForMatchesRegexImpl searchForMatches;
 
     @Before
     public void setUp() {
@@ -22,7 +22,6 @@ public class SearchForMatchesRegexImplTest {
 
         Assert.assertSame(searchForMatches.countMatchesForText(find, text1), 4L);
         Assert.assertSame(searchForMatches.countMatchesForText(find, text2), 1L);
-
     }
 
     @Test
@@ -31,6 +30,5 @@ public class SearchForMatchesRegexImplTest {
         String find = "softeq";
 
         Assert.assertSame(searchForMatches.countMatchesForText(find, text1), 0L);
-
     }
 }

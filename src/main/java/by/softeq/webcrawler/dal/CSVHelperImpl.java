@@ -1,4 +1,4 @@
-package com.softeq.webcrawler.dal;
+package by.softeq.webcrawler.dal;
 
 import java.io.IOException;
 

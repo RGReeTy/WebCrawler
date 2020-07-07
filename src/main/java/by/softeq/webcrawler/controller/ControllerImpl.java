@@ -1,11 +1,11 @@
-package com.softeq.webcrawler.controller;
+package by.softeq.webcrawler.controller;
 
-import com.softeq.webcrawler.bean.ConfigParam;
-import com.softeq.webcrawler.bean.Record;
-import com.softeq.webcrawler.dal.CSVHelper;
-import com.softeq.webcrawler.dal.CSVHelperImpl;
-import com.softeq.webcrawler.service.util.SearchForMatches;
-import com.softeq.webcrawler.service.util.SearchForMatchesRegexImpl;
+import by.softeq.webcrawler.bean.ConfigParam;
+import by.softeq.webcrawler.bean.Record;
+import by.softeq.webcrawler.dal.CSVHelper;
+import by.softeq.webcrawler.dal.CSVHelperImpl;
+import by.softeq.webcrawler.service.util.SearchForMatches;
+import by.softeq.webcrawler.service.util.SearchForMatchesRegexImpl;
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 
@@ -13,10 +13,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.softeq.webcrawler.service.RecordWorker.sortByTotalHits;
-import static com.softeq.webcrawler.service.RecordWorker.transformRecordToStringBuilder;
-import static com.softeq.webcrawler.service.util.JsoupParser.addLinksToQueue;
-import static com.softeq.webcrawler.service.util.JsoupParser.getHTMLDocumentByURL;
+import static by.softeq.webcrawler.service.RecordWorker.sortByTotalHits;
+import static by.softeq.webcrawler.service.RecordWorker.transformRecordToStringBuilder;
+import static by.softeq.webcrawler.service.util.JsoupParser.addLinksToQueue;
+import static by.softeq.webcrawler.service.util.JsoupParser.getHTMLDocumentByURL;
 
 /**
  * The type Controller.
@@ -51,10 +51,11 @@ public class ControllerImpl implements Controller {
         //Search start from input url
         reference.addFirst(configParam.getUrl());
 
-        try {
-            while (!reference.isEmpty() & maxPagesToFind > 0) {
-                Document document = getHTMLDocumentByURL(reference.getFirst());
-
+//        try {
+        do {
+            Document document = null;
+            try {
+                document = getHTMLDocumentByURL(reference.getFirst());
                 Record record = getLineOfCounters(reference.getFirst(), document, inputWords);
                 records.add(record);
 
@@ -62,20 +63,19 @@ public class ControllerImpl implements Controller {
                 if (maxDepthOfCrawling > 0) {
                     addLinksToQueue(document, reference);
                 }
-
-                //Delete used reference from collection
-                reference.removeFirst();
-                maxPagesToFind--;
-                maxDepthOfCrawling--;
+            } catch (IOException e) {
+                logger.error("Can't get document from url! " + e);
             }
 
-            //Creating body of future csv file
-            getStringBuilderFromListOfEntity(records, body);
-
-        } catch (IOException e) {
-            logger.error("Can't get document from url! " + e);
+            //Delete used reference from collection
+            reference.removeFirst();
+            maxPagesToFind--;
+            maxDepthOfCrawling--;
         }
+        while (!reference.isEmpty() & maxPagesToFind > 0);
 
+        //Creating body of future csv file
+        getStringBuilderFromListOfEntity(records, body);
 
         try {
             //save data to csv file
