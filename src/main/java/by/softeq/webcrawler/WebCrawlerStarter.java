@@ -19,19 +19,7 @@ public class WebCrawlerStarter {
      */
     public static void main(String[] args) {
 
-//        https://www.tesla.com/elon-musk
-//        Tesla, Musk, Elon
-//        2
-//        42
-
-//        http://seasonvar.ru
-//        2020, новинки, аниме
-//        1
-//        100
-
         ConfigParam configParam = transformUsersInputsToConfigParameters();
-
-        System.out.println(configParam.toString());
 
         Controller controller = new ControllerImpl();
         controller.startWebScrapping(configParam);
@@ -41,7 +29,7 @@ public class WebCrawlerStarter {
     private static ConfigParam transformUsersInputsToConfigParameters() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("WebCrawler began work.\nEnter url:");
+        System.out.println("WebCrawler start!.\nEnter url:");
         String address = scanner.nextLine();
 
         if (address.startsWith("www")) {

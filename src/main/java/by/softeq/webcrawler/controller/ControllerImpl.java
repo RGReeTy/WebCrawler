@@ -87,23 +87,6 @@ public class ControllerImpl implements Controller {
         }
     }
 
-
-    private void getTopTenTotalHitsDescOrder(StringBuilder header) throws IOException {
-        List<Record> topTenRecords = records.stream()
-                .sorted(sortByTotalHits)
-                .limit(10)
-                .collect(Collectors.toList());
-
-        StringBuilder topTen = new StringBuilder();
-
-        getStringBuilderFromListOfEntity(topTenRecords, topTen);
-
-        csvHelper.writeDataToCSVFile(header, topTen, TOP_TEN_STAT_FILE_NAME);
-
-        System.out.println("Top ten hits are: \n" + header + topTen);
-    }
-
-
     //Parsing html to match for every word
     private Record getLineOfCounters(String url, Document document, List<String> inputWords) {
         SearchForMatches searchForMatches = new SearchForMatchesRegexImpl();
@@ -133,5 +116,20 @@ public class ControllerImpl implements Controller {
                 text.append(transformRecordToStringBuilder(record)).append("\n");
             }
         }
+    }
+
+    private void getTopTenTotalHitsDescOrder(StringBuilder header) throws IOException {
+        List<Record> topTenRecords = records.stream()
+                .sorted(sortByTotalHits)
+                .limit(10)
+                .collect(Collectors.toList());
+
+        StringBuilder topTen = new StringBuilder();
+
+        getStringBuilderFromListOfEntity(topTenRecords, topTen);
+
+        csvHelper.writeDataToCSVFile(header, topTen, TOP_TEN_STAT_FILE_NAME);
+
+        System.out.println("Top ten hits are: \n" + header + topTen);
     }
 }
