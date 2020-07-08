@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class RecordTest {
@@ -37,7 +38,8 @@ public class RecordTest {
     @Test
     public void getHits() {
         long[] anotherArr = new long[]{1, 2, 3, 6};
-        assertEquals(Arrays.toString(anotherArr), Arrays.toString(record.getHits()));
+		assertArrayEquals(anotherArr, record.getHits());
+//        assertEquals(Arrays.toString(anotherArr), Arrays.toString(record.getHits()));
     }
 
     @Test

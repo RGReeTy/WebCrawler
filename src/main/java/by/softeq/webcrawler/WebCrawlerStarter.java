@@ -38,7 +38,7 @@ public class WebCrawlerStarter {
 
     }
 
-    public static ConfigParam transformUsersInputsToConfigParameters() {
+    private static ConfigParam transformUsersInputsToConfigParameters() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("WebCrawler began work.\nEnter url:");
